@@ -140,53 +140,6 @@ async def instructions(ctx: RunContext[StateDeps[AgentState]]) -> str:
 
 
 # ============================================================================
-# AGENT TOOLS - Chat and Messaging
-# ============================================================================
-
-@agent.tool_plain
-async def chat_tool(
-    message: str
-) -> list[TextMessageStartEvent, TextMessageContentEvent, TextMessageEndEvent]:
-    """
-    Handles general chat interactions that are not related to stock portfolio analysis.
-    This tool generates text message events for the UI to display conversational responses.
-    
-    When user asks for something unrelated to the stock portfolio, you should use this tool to answer the question. 
-    The answers should be generic and should be relevant to the user query. 
-    Also when the message role is a tool, you should trigger this tool to provide a summary of the tool call provided.
-
-    Args:
-        message (str): The message content to send back to the user
-
-    Returns:
-        list: A sequence of message events (start, content, end) for the UI to process
-    """
-    # Generate a unique identifier for this message
-    message_id = str(uuid.uuid4())
-    
-    # Return a sequence of events that represent a complete message lifecycle
-    return [
-        # Event 1: Signal the start of a new message
-        TextMessageStartEvent(
-            type=EventType.TEXT_MESSAGE_START,
-            message_id=message_id,
-            role="assistant",
-        ),
-        # Event 2: Send the actual message content
-        TextMessageContentEvent(
-            type=EventType.TEXT_MESSAGE_CONTENT,
-            message_id=message_id,
-            delta=message,  # The message text to display
-        ),
-        # Event 3: Signal the end of the message
-        TextMessageEndEvent(
-            type=EventType.TEXT_MESSAGE_END,
-            message_id=str(uuid.uuid4()),  # Generate new ID for end event
-        ),
-    ]
-
-
-# ============================================================================
 # AGENT TOOLS - Stock Data Management
 # ============================================================================
 
